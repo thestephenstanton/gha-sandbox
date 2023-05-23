@@ -14,17 +14,34 @@ async function run() {
         //   const payload = JSON.stringify(github.context.payload, undefined, 2)
         //   console.log(`The event payload: ${payload}`);
         console.log("getting token")
-        const githubToken = core.getInput("GITHUB_TOKEN")
+        const githubToken = core.getInput("gh-token")
     
         console.log("lenght of token", githubToken.length)
     
         const octokit = github.getOctokit(githubToken)
-    
+
         await octokit.request("POST /repos/{owner}/{repo}/issues/{issue_number}/comments", {
             ...github.context.repo,
             issue_number: github.context.issue.number,
             body: "Hello from Octokit!"
         });
+
+        const release = "v6.6.6"
+        const branch = "main"
+
+        await octokit.request('POST /repos/{owner}/{repo}/releases', {
+            ...github.context.repo,
+            tag_name: release,
+            target_commitish: branch,
+            name: release,
+            body: `Testing branch '${branch}'`,
+            draft: false,
+            prerelease: true,
+            generate_release_notes: true,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })
     
         // octokit.rest.issues.createComment({
         //     ...github.context.repo,
