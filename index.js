@@ -18,7 +18,7 @@ async function run() {
       
           const octokit = github.getOctokit(githubToken)
       
-          await octokit.request("POST /repos/{owner}/{repo}/issues/{issue_number}/comments", {
+          await octokit.rest.issues.createComment({
               ...github.context.repo,
               issue_number: github.context.issue.number,
               body: "Hello from Octokit!"
