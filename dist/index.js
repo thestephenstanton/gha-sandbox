@@ -9801,9 +9801,10 @@ try {
   // Get the JSON webhook payload for the event that triggered the workflow
 //   const payload = JSON.stringify(github.context.payload, undefined, 2)
 //   console.log(`The event payload: ${payload}`);
-    
+    console.log("getting token")
     const githubToken = core.getInput("GITHUB_TOKEN")
 
+    console.log("lenght of token", githubToken.length)
     const octokit = github.getOctokit(githubToken)
 
     octokit.issues.createComment({
@@ -9813,6 +9814,7 @@ try {
     })
 
 } catch (error) {
+    console.log("ah shit")
   core.setFailed(error.message);
 }
 })();
