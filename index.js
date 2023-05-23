@@ -16,6 +16,9 @@ try {
     console.log("lenght of token", githubToken.length)
     const octokit = github.getOctokit(githubToken)
 
+    console.log("repo", ...github.context.repo)
+    console.log("issue number", github.context.issue.number)
+
     octokit.issues.createComment({
         ...github.context.repo,
         issue_number: github.context.issue.number,
