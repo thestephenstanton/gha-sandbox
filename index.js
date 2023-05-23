@@ -27,6 +27,6 @@ try {
     })
 
 } catch (error) {
-    console.log("ah shit")
+    console.log("ah fuck")
   core.setFailed(error.message);
 }
