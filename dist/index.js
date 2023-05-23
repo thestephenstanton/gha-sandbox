@@ -9804,7 +9804,7 @@ try {
     
     const githubToken = core.getInput("GITHUB_TOKEN")
 
-    const octokit = new github.GitHub(githubToken)
+    const octokit = github.getOctokit(githubToken)
 
     octokit.issues.createComment({
         ...github.context.repo,
