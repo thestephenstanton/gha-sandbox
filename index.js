@@ -16,12 +16,8 @@ try {
     console.log("lenght of token", githubToken.length)
 
     const octokit = github.getOctokit(githubToken)
-    
-    console.log("octokit", octokit)
-    console.log("octokit issues", octokit.issues)
 
-
-    octokit.issues.createComment({
+    octokit.rest.issues.createComment({
         ...github.context.repo,
         issue_number: github.context.issue.number,
         body: "Hello from Octokit!"
