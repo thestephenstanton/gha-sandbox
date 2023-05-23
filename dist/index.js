@@ -9807,6 +9807,10 @@ try {
     console.log("lenght of token", githubToken.length)
 
     const octokit = github.getOctokit(githubToken)
+    
+    console.log("octokit", octokit)
+    console.log("octokit issues", octokit.issues)
+
 
     octokit.issues.createComment({
         ...github.context.repo,
