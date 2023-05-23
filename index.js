@@ -33,7 +33,7 @@ async function run() {
         // })
     
     } catch (error) {
-        console.log("ah fuck")
+        console.log("ah fuck", error)
         core.setFailed(error.message);
     }
 }
