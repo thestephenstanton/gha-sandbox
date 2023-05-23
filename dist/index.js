@@ -9805,9 +9805,6 @@ try {
     const githubToken = core.getInput("GITHUB_TOKEN")
 
     console.log("lenght of token", githubToken.length)
-    console.log("ok NOW here ")
-    console.log("issue number", github.context.issue.number)
-    console.log("repo", github.context.repo)
 
     const octokit = github.getOctokit(githubToken)
 
