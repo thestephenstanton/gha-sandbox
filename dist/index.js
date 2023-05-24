@@ -29,11 +29,6 @@ async function run() {
     }
 }
 
-run().catch(error => {
-    console.log("something went wrong", error)
-    core.setFailed(error.message);
-})
-
 async function createAlphaRelease(octokit) {
     const owner = github.context.payload.repository.owner.login
     const repo = github.context.payload.repository.name
@@ -170,11 +165,17 @@ const getNewAlphaNumber = (comments) => {
     return alphaNumber + 1
 }
 
+run().catch(error => {
+    console.log("something went wrong", error)
+    core.setFailed(error.message);
+})
+
 // export all functions for testing
 module.exports = {
     getAllAlphaReleases,
     getNewAlphaNumber,
 }
+
 
 /***/ }),
 
