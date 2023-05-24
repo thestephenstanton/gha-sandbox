@@ -102,7 +102,7 @@ const cleanUpAlphaReleases = async (octokit) => {
     console.log("release ids", releaseIds)
 
     // delete all releases
-    for (const releaseId in releaseIds) {
+    for (const releaseId of releaseIds) {
         await octokit.request("DELETE /repos/{owner}/{repo}/releases/{release_id}", {
             owner: owner,
             repo: repo,
