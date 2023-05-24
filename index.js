@@ -86,7 +86,7 @@ const cleanUpAlphaReleases = async (octokit) => {
     console.log("releases", releases)
 
     // get all release ids
-    for (const release in releases) {
+    for (const release of releases) {
         const id = octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
             owner: owner,
             repo: repo,
