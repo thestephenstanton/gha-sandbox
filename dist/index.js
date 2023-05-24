@@ -100,7 +100,10 @@ const cleanUpAlphaReleases = async (octokit) => {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
-        }).then((data) => data.id)
+        }).then((data) => {
+            console.log("-----", data)
+            return data.id
+        })
 
         releaseIdPromises.push(id)
     }
