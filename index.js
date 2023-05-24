@@ -12,6 +12,7 @@ async function run() {
             return createRelease(octokit)
         case "clean-up":
             console.log("not yet implemented")
+            return
         default:
             return core.setFailed(`Action ${action} not supported`)
     }
