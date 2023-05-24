@@ -14,7 +14,7 @@ async function run() {
         //   const payload = JSON.stringify(github.context.payload, undefined, 2)
         //   console.log(`The event payload: ${payload}`);
         console.log("getting token")
-        const githubToken = core.getInput("GITHUB_TOKEN")
+        const githubToken = core.getInput("gh-token")
     
         console.log("lenght of token", githubToken.length)
     
