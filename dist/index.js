@@ -9813,7 +9813,7 @@ run().catch(error => {
     core.setFailed(error.message);
 })
 
-async function createRelease() {
+async function createRelease(octokit) {
     const owner = github.context.payload.repository.owner.login
     const repo = github.context.payload.repository.name
     const prNumber = github.context.payload.issue.number
