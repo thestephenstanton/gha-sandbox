@@ -26,7 +26,7 @@ async function run() {
             body: "Hello from Octokit!"
         });
 
-        const release = "v6.6.7"
+        const release = "v6.7.7"
         const branch = "main"
 
         await octokit.request('POST /repos/{owner}/{repo}/releases', {
