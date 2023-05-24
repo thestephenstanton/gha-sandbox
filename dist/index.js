@@ -98,9 +98,9 @@ const cleanUpAlphaReleases = async (octokit) => {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
-        }).map((data) => data.id)
+        }).then((data) => data.id)
 
-        releaseIdPromises.push(data.id)
+        releaseIdPromises.push(id)
     }
 
     const releaseIds = await Promise.all(releaseIdPromises)
