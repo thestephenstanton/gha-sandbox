@@ -81,6 +81,7 @@ async function createAlphaRelease(octokit) {
 const cleanUpAlphaReleases = async (octokit) => {
     const owner = github.context.payload.repository.owner.login
     const repo = github.context.payload.repository.name
+    const prNumber = github.context.payload.issue.number
     const commentsUrl = github.context.payload.issue.comments_url
 
     const comments = await getAllCommentsFromPR(octokit, commentsUrl)
@@ -104,8 +105,6 @@ const cleanUpAlphaReleases = async (octokit) => {
     }
 
     const releaseIds = await Promise.all(releaseIdPromises)
-
-    console.log("release ids", releaseIds)
 
     // delete all releases
     for (const releaseId of releaseIds) {
