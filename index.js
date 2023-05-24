@@ -26,22 +26,22 @@ async function run() {
             body: "Hello from Octokit!"
         });
 
-        const release = "v6.6.6"
-        const branch = "main"
+        // const release = "v6.6.6"
+        // const branch = "main"
 
-        await octokit.request('POST /repos/{owner}/{repo}/releases', {
-            ...github.context.repo,
-            tag_name: release,
-            target_commitish: branch,
-            name: release,
-            body: `Testing branch '${branch}'`,
-            draft: false,
-            prerelease: true,
-            generate_release_notes: true,
-            headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
-            }
-        })
+        // await octokit.request('POST /repos/{owner}/{repo}/releases', {
+        //     ...github.context.repo,
+        //     tag_name: release,
+        //     target_commitish: branch,
+        //     name: release,
+        //     body: `Testing branch '${branch}'`,
+        //     draft: false,
+        //     prerelease: true,
+        //     generate_release_notes: true,
+        //     headers: {
+        //         'X-GitHub-Api-Version': '2022-11-28'
+        //     }
+        // })
     
         // octokit.rest.issues.createComment({
         //     ...github.context.repo,
