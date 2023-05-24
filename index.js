@@ -83,8 +83,6 @@ const cleanUpAlphaReleases = async (octokit) => {
 
     const releaseIdPromises = []
 
-    console.log("releases", releases)
-
     // get all release ids
     for (const release of releases) {
         const id = octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
@@ -94,10 +92,7 @@ const cleanUpAlphaReleases = async (octokit) => {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
-        }).then((data) => {
-            console.log("-----", data)
-            return data.id
-        })
+        }).then((response) => response.data.id)
 
         releaseIdPromises.push(id)
     }
