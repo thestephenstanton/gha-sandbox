@@ -9802,7 +9802,7 @@ async function run() {
         case "create-release":
             return createRelease(octokit)
         case "clean-up":
-        // TODO implement
+            console.log("not yet implemented")
         default:
             return core.setFailed(`Action ${action} not supported`)
     }
