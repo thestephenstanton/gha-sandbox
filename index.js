@@ -73,19 +73,38 @@ async function createAlphaRelease(octokit) {
 }
 
 const cleanUpAlphaReleases = async (octokit) => {
+    const owner = github.context.payload.repository.owner.login
+    const repo = github.context.payload.repository.name
     const commentsUrl = github.context.payload.issue.comments_url
 
     const comments = await getAllCommentsFromPR(octokit, commentsUrl)
 
     const releases = getAllAlphaReleases(comments)
 
+    const releaseIdPromises = []
+
+    // get all release ids
+    for (const release in releases) {
+        const id = octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
+            owner: owner,
+            repo: repo,
+            tag: release,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        }).map((data) => data.id)
+
+        releaseIdPromises.push(data.id)
+    }
+
+    const releaseIds = await Promise.all(releaseIdPromises)
+
     // delete all releases
-    for (let i = 0; i < releases.length; i++) {
-        const release = releases[i]
+    for (const releaseId in releaseIds) {
         await octokit.request("DELETE /repos/{owner}/{repo}/releases/{release_id}", {
             owner: owner,
             repo: repo,
-            release_id: release.id,
+            release_id: releaseId,
             headers: {
                 "x-github-api-version": "2022-11-28",
             },
