@@ -83,6 +83,8 @@ const cleanUpAlphaReleases = async (octokit) => {
 
     const releaseIdPromises = []
 
+    console.log("releases", releases)
+
     // get all release ids
     for (const release in releases) {
         const id = octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
@@ -98,8 +100,6 @@ const cleanUpAlphaReleases = async (octokit) => {
     }
 
     const releaseIds = await Promise.all(releaseIdPromises)
-
-    console.log("release ids", releaseIds)
 
     // delete all releases
     for (const releaseId in releaseIds) {
