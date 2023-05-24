@@ -3,6 +3,9 @@ description: 'When typing "test", it this action will create an alpha release'
 inputs:
   gh-token:
     required: true
+  action:
+    required: true
+    description: "What action you want to perform"
 runs:
   using: 'node16'
   main: 'dist/index.js'
