@@ -42,16 +42,16 @@ async function createAlphaRelease(octokit) {
     const message = `${commentPrefix.release} ${release}`
 
     // get some details about the PR
-    const { data } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pr_number}', {
+    const { data } = await autoRetry(octokit.request('GET /repos/{owner}/{repo}/pulls/{pr_number}', {
         owner: owner,
         repo: repo,
         pr_number: prNumber,
-    })
+    }))
 
     const branch = data.head.ref
 
     // create the release
-    await octokit.request('POST /repos/{owner}/{repo}/releases', {
+    await autoRetry(octokit.request('POST /repos/{owner}/{repo}/releases', {
         owner: owner,
         repo: repo,
         tag_name: release,
@@ -64,10 +64,10 @@ async function createAlphaRelease(octokit) {
         headers: {
             'X-GitHub-Api-Version': '2022-11-28'
         }
-    })
+    }))
 
     // comment on the PR
-    await octokit.request("POST /repos/{owner}/{repo}/issues/{issue_number}/comments", {
+    await autoRetry(octokit.request("POST /repos/{owner}/{repo}/issues/{issue_number}/comments", {
         owner: owner,
         repo: repo,
         issue_number: prNumber,
@@ -75,7 +75,7 @@ async function createAlphaRelease(octokit) {
         headers: {
             "x-github-api-version": "2022-11-28",
         },
-    });
+    }))
 }
 
 const cleanUpAlphaReleases = async (octokit) => {
@@ -92,14 +92,14 @@ const cleanUpAlphaReleases = async (octokit) => {
 
     // get all release ids
     for (const release of releases) {
-        const id = octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
+        const id = autoRetry(octokit.request('GET /repos/{owner}/{repo}/releases/tags/{tag}', {
             owner: owner,
             repo: repo,
             tag: release,
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
-        }).then((response) => response.data.id)
+        })).then((response) => response.data.id)
 
         releaseIdPromises.push(id)
     }
@@ -108,18 +108,18 @@ const cleanUpAlphaReleases = async (octokit) => {
 
     // delete all releases
     for (const releaseId of releaseIds) {
-        await octokit.request("DELETE /repos/{owner}/{repo}/releases/{release_id}", {
+        await autoRetry(octokit.request("DELETE /repos/{owner}/{repo}/releases/{release_id}", {
             owner: owner,
             repo: repo,
             release_id: releaseId,
             headers: {
                 "x-github-api-version": "2022-11-28",
             },
-        });
+        }))
     }
 
     // comment on the PR
-    await octokit.request("POST /repos/{owner}/{repo}/issues/{issue_number}/comments", {
+    await autoRetry(octokit.request("POST /repos/{owner}/{repo}/issues/{issue_number}/comments", {
         owner: owner,
         repo: repo,
         issue_number: prNumber,
@@ -127,7 +127,7 @@ const cleanUpAlphaReleases = async (octokit) => {
         headers: {
             "x-github-api-version": "2022-11-28",
         },
-    });
+    }))
 }
 
 ////////////////////////
@@ -135,11 +135,11 @@ const cleanUpAlphaReleases = async (octokit) => {
 ////////////////////////
 
 const getAllCommentsFromPR = async (octokit, commentsUrl) => {
-    return octokit.paginate(
+    return autoRetry(octokit.paginate(
         `GET ${commentsUrl}`,
         {},
         (response) => response.data.map((comment) => comment.body)
-    )
+    ))
 }
 
 const generateReleaseName = (comments, prNumber, username) => {
@@ -168,7 +168,7 @@ const getAllAlphaReleases = (comments, includeDeleted = false) => {
 
 const getNewAlphaNumber = (comments) => {
     const releases = getAllAlphaReleases(comments, includeDeleted = true) // we include deleted just so we keep the count going up
-    
+
     if (releases.length == 0) {
         return 0
     }
@@ -183,6 +183,27 @@ const getNewAlphaNumber = (comments) => {
     const alphaNumber = parseInt(match[1], 10)
 
     return alphaNumber + 1
+}
+
+const autoRetry = async (func, retries = 3, delayMs = 100) => {
+    let error = null
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            const result = await func()
+
+            return result
+        }
+        catch (_error) {
+            error = _error
+
+            await wait(delayMs)
+        }
+    }
+    if (error) {
+        throw error
+    }
+
+    return null
 }
 
 run().catch(error => {
